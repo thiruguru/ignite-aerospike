@@ -16,15 +16,11 @@ except:
   sys.exit(1)
 
 # Records are addressable via a tuple of (namespace, set, key)
-key = ('item_detail', 'inventory', '55667788|100') 
+key = ('item_detail', 'price', 'upcstore')
 
 try:
   # Write a record
-  bins={'ohqty':7,
-	'whrqty':0,
-        'transqty':0
-        }
-  client.put(key, bins)
+  client.put(key, {'sellprice': 19.97})
 
 except Exception as e:
   import sys
