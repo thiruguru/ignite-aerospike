@@ -18,19 +18,28 @@ urls = (
 app = web.application(urls, globals())
 
 class invprice:        
-    def GET(self, name):
+     def GET(self, name):
+	request_params = web.input()	
+  	print(request_params.lat)
+	print(request_params.lang)
+	#latitude=36.3312292
+	#langitude=-94.1491043637163
+	upc=str(request_params.upc)
+	latitude=float(request_params.lat)
+	langitude=float(request_params.lang)
+	radius=int(request_params.radius)
 	try:
 	    client = aerospike.client(config).connect()
 	   # Records are addressable via a tuple of (namespace, set, key)
 	    query = client.query('locality', 'location')
 	    query.select('store','seller','address','loc')
-	    query.where(p.geo_within_radius('loc', -94.2217082259192, 36.3689382317293, 1000))
+	    query.where(p.geo_within_radius('loc', langitude, latitude, radius))
 	    stores = []
  	    sellers = []
             address = []
 	    ohqty = []
 	    price = []
-	    upc='123456789'+'|'	    
+	    upc1=upc+'|'	    
 	    def matched_names((key, metadata, bins)):
 		    stores.append(bins['store'])
 		    sellers.append(bins['seller'])
@@ -40,13 +49,16 @@ class invprice:
 	
 	    def fetch_inv_price():
 		for i in range(0,stores .__len__()):
-		    key=upc+str(stores[i])
+		    key=upc1+str(stores[i])
+		    print("KEY::",key)
+		    
 		    keyInv = ('item_detail', 'inventory', key)
                     #Read a record
                     (key, metadata, record) = client.get(keyInv)
                     ohqty.append(record.get('ohqty'))
-
-                    keyPrice = ('item_detail', 'price', '55667788|100')
+		    
+		    key2=upc1+str(stores[i])
+                    keyPrice = ('item_detail', 'price', key2)
                     (key, metadata, record) = client.get(keyPrice)
                     price.append(record.get('sellprice'))
 
@@ -54,7 +66,7 @@ class invprice:
 
 	    #pp.pprint(stores[1])
 	    #pp.pprint(sellers)
-	    startTag = '{"product": { "upc": 1234567,"details": ['
+	    startTag = '{"product": { "upc": '+upc+',"details": ['
 	    endTag='] } }'
 	    response=startTag 
 	    for x in range(0, sellers.__len__()):
