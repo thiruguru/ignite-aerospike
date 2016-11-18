@@ -1,6 +1,7 @@
 # import the module
 from __future__ import print_function
 import aerospike
+import time
 
 # Configure the client
 config = {
@@ -16,13 +17,16 @@ except:
   sys.exit(1)
 
 # Records are addressable via a tuple of (namespace, set, key)
-key = ('item_detail', 'inventory', '55667788|100') 
+key = ('item_detail', 'inventory', '123456789|107') 
 
 try:
   # Write a record
-  bins={'ohqty':7,
+  bins={'store':107,
+	'upc':123456789,
+	'ohqty':16,
 	'whrqty':0,
-        'transqty':0
+        'transqty':0,
+	'writeTime':int(time.time()*1000)
         }
   client.put(key, bins)
 

@@ -1,6 +1,7 @@
 # import the module
 from __future__ import print_function
 import aerospike
+import time
 
 # Configure the client
 config = {
@@ -16,11 +17,11 @@ except:
   sys.exit(1)
 
 # Records are addressable via a tuple of (namespace, set, key)
-key = ('item_detail', 'price', 'upcstore')
+key = ('item_detail', 'price', '123456789|107')
 
 try:
   # Write a record
-  client.put(key, {'sellprice': 19.97})
+  client.put(key, {'sellprice': 19.97,'upc':123456789,'store':107,'writeTime':int(time.time()*1000)})
 
 except Exception as e:
   import sys
