@@ -30,16 +30,27 @@ class invprice:
 	radius=int(request_params.radius)
 	try:
 	    client = aerospike.client(config).connect()
+
 	   # Records are addressable via a tuple of (namespace, set, key)
 	    query = client.query('locality', 'location')
 	    query.select('store','seller','address','loc')
 	    query.where(p.geo_within_radius('loc', langitude, latitude, radius))
+
 	    stores = []
  	    sellers = []
             address = []
 	    ohqty = []
 	    price = []
 	    upc1=upc+'|'	    
+
+	    #response=requests.get('http://127.0.0.1:8080/?upc=123456789&lat=36.3369605&lang=-94.2215415&radius=600')
+	    #list1=res.content.split('~')
+
+	    #for x in range(0,list1.__len__()):
+        	#stores=list1[0].split('|')
+	        #sellers=list1[1].split('|')
+        	#address=list1[2].split('|')
+	    
 	    def matched_names((key, metadata, bins)):
 		    stores.append(bins['store'])
 		    sellers.append(bins['seller'])
